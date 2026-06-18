@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>随机数字</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1a1a2e;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  .container {
+    text-align: center;
+  }
+  .number {
+    font-size: 120px;
+    color: #00ffaa;
+    font-weight: 300;
+    letter-spacing: 2px;
+    text-shadow: 0 0 40px rgba(0, 255, 170, 0.4);
+    transition: all 0.3s ease;
+  }
+  .range {
+    color: #888;
+    font-size: 18px;
+    margin-top: 20px;
+    letter-spacing: 3px;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="number" id="number">0.000</div>
+    <div class="range">0.100 - 1.600</div>
+  </div>
+  <script>
+    const el = document.getElementById('number');
+    function update() {
+      const n = (0.1 + Math.random() * 1.5).toFixed(3);
+      el.textContent = n;
+    }
+    update();
+  </script>
+</body>
+</html>
