@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>随机数字</title>
+<title>随机数字 · 扫描坐标</title>
 <style>
   body {
     margin: 0;
@@ -24,10 +24,26 @@
     text-shadow: 0 0 40px rgba(0, 255, 170, 0.4);
     transition: all 0.08s ease;
   }
+  .coord {
+    color: #7ab8ff;
+    font-size: 36px;
+    margin-top: 30px;
+    font-weight: 300;
+    letter-spacing: 4px;
+    font-family: monospace;
+    text-shadow: 0 0 20px rgba(122, 184, 255, 0.3);
+  }
+  .coord span {
+    margin: 0 12px;
+  }
+  .coord b {
+    color: #fff;
+    font-weight: 400;
+  }
   .range {
-    color: #888;
-    font-size: 18px;
-    margin-top: 20px;
+    color: #666;
+    font-size: 14px;
+    margin-top: 25px;
     letter-spacing: 3px;
   }
 </style>
@@ -35,14 +51,49 @@
 <body>
   <div class="container">
     <div class="number" id="number">0.000</div>
-    <div class="range">0.100 - 1.600</div>
+    <div class="coord"><span>X:<b id="x">0.0</b></span><span>Y:<b id="y">0.0</b></span></div>
+    <div class="range">网格 67×67 · 每秒 1 格 · 蛇形扫描</div>
   </div>
   <script>
-    const el = document.getElementById('number');
-    function update() {
-      const n = (0.1 + Math.random() * 1.5).toFixed(3);
-      el.textContent = n;
+    const numEl = document.getElementById('number');
+    const xEl = document.getElementById('x');
+    const yEl = document.getElementById('y');
+
+    const SIZE = 67;
+    const TOTAL = SIZE * SIZE;
+
+    let cellIndex = 0;
+    let startTime = performance.now();
+
+    function cellCoord(n) {
+      const row = Math.floor(n / SIZE);
+      const colInRow = n % SIZE;
+      const y = (row % 2 === 0) ? colInRow : (SIZE - 1 - colInRow);
+      const x = row;
+      return { x, y };
     }
+
+    function update() {
+      const now = performance.now();
+      const elapsedSec = (now - startTime) / 1000;
+
+      const cellFloat = elapsedSec % TOTAL;
+      const currentCell = Math.floor(cellFloat);
+      const frac = cellFloat - currentCell;
+
+      const cur = cellCoord(currentCell);
+      const next = cellCoord((currentCell + 1) % TOTAL);
+
+      const xf = cur.x + (next.x - cur.x) * frac;
+      const yf = cur.y + (next.y - cur.y) * frac;
+
+      xEl.textContent = xf.toFixed(1);
+      yEl.textContent = yf.toFixed(1);
+
+      const n = (0.1 + Math.random() * 1.5).toFixed(3);
+      numEl.textContent = n;
+    }
+
     update();
     setInterval(update, 100);
   </script>
